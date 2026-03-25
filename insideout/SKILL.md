@@ -149,7 +149,7 @@ Only include lines where something was detected.
 2. Call `convoopen` with:
    - `project_context`: The context string you built from scanning
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
-3. Display Riley's response **verbatim** -- output the exact text from the tool response as your entire reply. No preamble, no summary, no commentary.
+3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 
 ### During the Conversation
 
@@ -184,7 +184,7 @@ Riley's responses can take 20-60 seconds. When `convoreply` returns a `"processi
 ## Critical Rules
 
 ### Do:
-- Show Riley's messages verbatim as your entire output
+- Show Riley's messages as your entire output, but **strip the delimiter lines** (`=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`) -- only display the content between them
 - Use `convostatus` proactively to check progress
 - Store the `session_id` from `convoopen` -- all tools need it
 - Let users review Terraform before deploying
