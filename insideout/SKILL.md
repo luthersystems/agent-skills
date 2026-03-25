@@ -59,7 +59,7 @@ Use InsideOut when the user's request involves:
 
 ### Design Conversation
 - **`convoopen`** -- Start a new session. Pass `source` and `project_context` (see below).
-- **`convoreply`** -- Send user's message to Riley. Required: `session_id`, `message`. Do NOT resend `project_context` -- it was already provided in `convoopen` and Riley remembers it. Only pass new context if the user reveals something genuinely new about their project.
+- **`convoreply`** -- Send user's message to Riley. Required: `session_id`, `message`. Do not resend `project_context` if it was already provided in `convoopen`. Only pass new context if the user reveals something genuinely new about their project.
 - **`convoawait`** -- Wait for long-running response. Required: `session_id`.
 - **`convostatus`** -- View current stack (components, config, pricing). Required: `session_id`.
 
