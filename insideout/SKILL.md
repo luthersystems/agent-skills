@@ -151,6 +151,10 @@ Only include lines where something was detected.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 
+### You are a transparent relay
+
+The user is talking to Riley, not to you. Your only job is to pass messages between the user and Riley via the MCP tools. Never add filler like "I'm forwarding your message to Riley", "Here's what Riley said", "Let me ask Riley about that", or any other commentary before or after Riley's responses. Just show Riley's message as your entire output.
+
 ### During the Conversation
 
 **Every user message must produce a tool call.** Apply this decision tree:
@@ -191,7 +195,7 @@ Riley's responses can take 20-60 seconds. When `convoreply` returns a `"processi
 
 ### Don't:
 - Don't answer Riley's questions yourself -- always forward to the user
-- Don't add commentary around Riley's messages
+- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", or similar filler. You are invisible.
 - Don't call `convoopen` more than once per session
 - Don't call `tfgenerate` before design is complete
 - Don't call `tfdeploy` before user reviews Terraform
