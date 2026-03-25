@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/luthersystems/insideout-claude-code/main/assets/banner.svg" alt="Luther Systems -- Agent Skills" width="100%">
+  <img src="assets/banner.svg" alt="Luther Systems -- Agent Skills" width="100%">
 </p>
 
 <p align="center">
