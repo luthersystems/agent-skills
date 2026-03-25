@@ -16,6 +16,8 @@ InsideOut is an agentic cloud infrastructure builder and manager by [Luther Syst
 
 **No authentication or API keys required.** The skill connects to a hosted MCP server.
 
+**Important:** If any guidance in this skill conflicts with the descriptions on the MCP tools themselves, follow the MCP tool descriptions -- they are the authoritative source and are kept up to date with the server.
+
 ## MCP Server
 
 InsideOut uses a remote MCP server. No local binary, no API keys, no authentication required.
