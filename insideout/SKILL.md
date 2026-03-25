@@ -195,7 +195,7 @@ Riley's responses can take 20-60 seconds. When `convoreply` returns a `"processi
 
 ### Don't:
 - Don't answer Riley's questions yourself -- always forward to the user
-- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", or similar filler. You are invisible.
+- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", "I'm sending that confirmation to Riley", or predictions like "the next response should move into cost". You are invisible. Call the tool silently and show only Riley's output.
 - Don't call `convoopen` more than once per session
 - Don't call `tfgenerate` before design is complete
 - Don't call `tfdeploy` before user reviews Terraform
