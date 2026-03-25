@@ -148,7 +148,7 @@ Only include lines where something was detected.
 1. Scan workspace files silently (no output to user)
 2. Call `convoopen` with:
    - `project_context`: The context string you built from scanning
-   - `source`: Set this to the name of the agent platform you are running on. Use `"codex"` for OpenAI Codex, `"claude-code"` for Claude Code, `"cursor"` for Cursor, `"kiro"` for Kiro, or the platform name otherwise.
+   - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's response **verbatim** -- output the exact text from the tool response as your entire reply. No preamble, no summary, no commentary.
 
 ### During the Conversation
