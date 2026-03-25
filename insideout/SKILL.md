@@ -18,7 +18,17 @@ InsideOut is an agentic cloud infrastructure builder and manager by [Luther Syst
 
 ## MCP Server
 
-InsideOut uses a remote MCP server. Add the following to your MCP configuration:
+InsideOut uses a remote MCP server. No local binary, no API keys, no authentication required.
+
+### If MCP server is not connected
+
+Before proceeding with any InsideOut workflow, check if the `insideout` MCP tools (like `convoopen`, `convoreply`) are available. If they are not, the MCP server needs to be added. Run this command in the shell:
+
+```bash
+codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp
+```
+
+For other agents, add this to your MCP configuration:
 
 ```json
 {
@@ -31,7 +41,7 @@ InsideOut uses a remote MCP server. Add the following to your MCP configuration:
 }
 ```
 
-No local binary, no API keys, no authentication required.
+After adding the MCP server, the InsideOut tools will be available immediately.
 
 ## When This Skill Activates
 
