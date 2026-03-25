@@ -1,0 +1,7 @@
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "insideout"
+      description: "InsideOut MCP server -- agentic cloud infrastructure builder & manager"
+      transport: "streamable_http"
+      url: "https://app.luthersystems.com/v1/insideout-mcp"
