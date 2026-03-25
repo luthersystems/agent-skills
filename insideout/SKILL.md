@@ -146,7 +146,9 @@ Only include lines where something was detected.
 ### Starting a Session
 
 1. Scan workspace files silently (no output to user)
-2. Call `convoopen` with `project_context` and `source`
+2. Call `convoopen` with:
+   - `project_context`: The context string you built from scanning
+   - `source`: Set this to the name of the agent platform you are running on. Use `"codex"` for OpenAI Codex, `"claude-code"` for Claude Code, `"cursor"` for Cursor, `"kiro"` for Kiro, or the platform name otherwise.
 3. Display Riley's response **verbatim** -- output the exact text from the tool response as your entire reply. No preamble, no summary, no commentary.
 
 ### During the Conversation

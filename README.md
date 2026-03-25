@@ -143,11 +143,16 @@ This works with Claude Code, Codex, Cursor, Kiro, Windsurf, and any tool that su
 
 > **Note:** Because this repo contains multiple product skills, use the `--path` flag to install a specific one.
 
-### Using Codex `$skill-installer`
+### Using Codex
 
+1. Install the skill:
 ```
 $skill-installer install https://github.com/luthersystems/agent-skills/tree/main/insideout
 ```
+
+2. Activate it by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically. Accept the prompt, and you're ready to go.
+
+> **Note:** The MCP auto-install is triggered when you first invoke the skill with `$insideout`, not at skill install time. If Codex doesn't prompt, you can manually add the MCP server: `codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp`
 
 ### Using Claude Code
 
