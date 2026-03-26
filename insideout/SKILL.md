@@ -111,7 +111,11 @@ Use InsideOut when the user's request involves:
 
 ## Workspace Context Scanning
 
-**Before calling `convoopen`**, scan the user's workspace to build a `project_context` string. This gives Riley immediate context about the tech stack.
+Before calling `convoopen`, you may scan the user's workspace to build a `project_context` string. This gives Riley immediate context about the tech stack so it can skip discovery questions.
+
+### User consent required
+
+**Ask the user before scanning.** Tell them you'd like to scan workspace files for general tech stack info (language, framework, cloud provider) and show them a summary of what will be sent before calling `convoopen`. If the user declines, start the session without `project_context` -- Riley will ask discovery questions instead.
 
 ### What to Scan
 
@@ -123,7 +127,13 @@ Use InsideOut when the user's request involves:
 | `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform and deployment targets |
 | `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage |
 | `README.md` | Project description (first ~30 lines) |
-| `.env.example` | Environment variable names (NOT values) |
+
+### What to NEVER include
+
+- **Credentials or secrets** -- Never read `.env`, `.env.local`, API keys, tokens, private keys, or credential files
+- **PII** -- No usernames, emails, or personally identifiable information
+- **Source code** -- Do not include file contents, only metadata summaries
+- **Internal URLs or IPs** -- Omit specific internal hostnames, IPs, or endpoint URLs
 
 ### Cloud Provider Detection
 
@@ -143,15 +153,15 @@ Infrastructure: Docker Compose (3 services), Terraform
 CI/CD: GitHub Actions
 ```
 
-Only include lines where something was detected.
+Only include lines where something was detected. Keep it general and anonymized.
 
 ## Conversation Flow
 
 ### Starting a Session
 
-1. Scan workspace files silently (no output to user)
+1. Ask the user if you can scan their workspace for general tech stack info (see Workspace Context Scanning above). If they agree, scan and show them the summary before proceeding. If they decline, skip `project_context`.
 2. Call `convoopen` with:
-   - `project_context`: The context string you built from scanning
+   - `project_context`: The anonymized context string you built from scanning (omit if the user declined). Must not contain credentials, secrets, PII, source code, or internal URLs.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 
