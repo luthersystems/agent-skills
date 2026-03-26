@@ -109,40 +109,33 @@ Use InsideOut when the user's request involves:
 | **CI/CD** | CodePipeline, GitHub Actions | Cloud Build |
 | **Backup** | AWS Backup | GCP Backups |
 
-## Workspace Context Scanning
+## Project Context
 
-### Purpose
+Riley designs cloud infrastructure. To recommend the right architecture, it needs to know general tech stack details -- the same information you'd share in the first few minutes of a conversation with a solutions architect. Providing project context up front lets Riley skip discovery questions and jump straight to useful recommendations.
 
-Riley designs cloud infrastructure. To recommend the right architecture, it needs to know general tech stack details: what language and framework you use, whether you already have Terraform or containers, and which cloud provider you're targeting. This is the same information you'd share in the first few minutes of a conversation with a solutions architect. Without it, Riley asks these questions one by one -- project context just speeds up the process.
+### How to build project context
 
-### User consent required
+Based on what you already know about the user's project (from the working directory, recent conversation, or what they've told you), put together a short summary covering whichever of these apply:
 
-**Ask the user before scanning.** Tell them you'd like to scan workspace files for general tech stack info (language, framework, cloud provider) and show them a summary of what will be sent before calling `convoopen`. If the user declines, start the session without `project_context` -- Riley will ask discovery questions instead.
-
-### What to Scan
-
-| File / Pattern | Extract | Why Riley needs it |
+| Detail | Why Riley needs it | Example |
 |---|---|---|
-| `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml` | Language, framework, key dependencies | Determines compute type (Lambda vs ECS vs EC2), runtime constraints |
-| `Dockerfile`, `docker-compose.yml` | Container usage, service topology, exposed ports | Informs container orchestration choice (ECS, EKS, Cloud Run) |
-| `*.tf`, `terraform/` | Existing IaC, provider, resource types | Avoids conflicting with existing infrastructure |
-| `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform and deployment targets | Integrates deployment pipeline with existing CI/CD |
-| `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage | Determines whether to target existing K8s or provision new compute |
-| `README.md` | Project description (first ~30 lines) | General understanding of what the project does |
+| Language and framework | Determines compute type (Lambda vs ECS vs EC2), runtime constraints | "Node.js 20, Next.js 15" |
+| Database and services | Shapes data tier and caching recommendations | "PostgreSQL, Redis" |
+| Container usage | Informs orchestration choice (ECS, EKS, Cloud Run) | "Docker Compose, 3 services" |
+| Existing infrastructure-as-code | Avoids conflicting with what's already provisioned | "Terraform with ECS + RDS" |
+| CI/CD platform | Integrates deployment pipeline | "GitHub Actions" |
+| Cloud provider | Targets the right provider from the start | "AWS" or "GCP" |
+| Kubernetes usage | Determines whether to target existing K8s or provision new compute | "EKS with Helm" |
+| What the project does | General understanding for architecture fit | "E-commerce API, ~50k MAU" |
+
+**Before sending**, confirm with the user: "I'd like to share this project summary with Riley so it can tailor its recommendations -- does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask.
 
 ### What to NEVER include
 
-- **Credentials or secrets** -- Never read `.env`, `.env.local`, API keys, tokens, private keys, or credential files
+- **Credentials or secrets** -- No API keys, tokens, passwords, private keys, or `.env` values
 - **PII** -- No usernames, emails, or personally identifiable information
-- **Source code** -- Do not include file contents, only metadata summaries
+- **Source code** -- Only metadata summaries, never file contents
 - **Internal URLs or IPs** -- Omit specific internal hostnames, IPs, or endpoint URLs
-
-### Cloud Provider Detection
-
-| Signal | Provider |
-|---|---|
-| `provider "aws"` in `.tf`, `aws-sdk`/`boto3` in deps | AWS |
-| `provider "google"` in `.tf`, `@google-cloud/*` in deps | GCP |
 
 ### Format
 
@@ -155,15 +148,15 @@ Infrastructure: Docker Compose (3 services), Terraform
 CI/CD: GitHub Actions
 ```
 
-Only include lines where something was detected. Keep it general and anonymized.
+Only include lines where you have information. Keep it general and anonymized.
 
 ## Conversation Flow
 
 ### Starting a Session
 
-1. Ask the user if you can scan their workspace for general tech stack info (see Workspace Context Scanning above). If they agree, scan and show them the summary before proceeding. If they decline, skip `project_context`.
+1. Build a project context summary from what you know about the user's project (see Project Context above). Show it to the user and confirm before sending. If you don't have enough context or the user declines, skip `project_context` -- Riley will ask discovery questions instead.
 2. Call `convoopen` with:
-   - `project_context`: The anonymized context string you built from scanning (omit if the user declined). Must not contain credentials, secrets, PII, source code, or internal URLs.
+   - `project_context`: The summary you confirmed with the user (omit if skipped). Must not contain credentials, secrets, PII, source code, or internal URLs.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 
