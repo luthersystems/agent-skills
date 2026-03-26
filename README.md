@@ -1,52 +1,167 @@
-<p align="center">
-  <img src="assets/banner.svg" alt="Luther Systems -- Agent Skills" width="100%">
-</p>
+# Agent Skills -- InsideOut
 
-<p align="center">
-  <strong>Portable agent skills for Luther Systems products -- works with Claude Code, Codex, Cursor, Kiro, Windsurf, and 30+ other tools</strong>
-</p>
+## Portable AI Skills for Cloud Infrastructure
 
-<p align="center">
-  <a href="https://insideout.luthersystems.com">InsideOut</a> •
-  <a href="https://luthersystems.com">Luther Systems</a> •
-  <a href="https://insideout.luthersystems.com/discord"><img src="https://img.shields.io/badge/Discord-Join%20Us-5865F2?logo=discord&logoColor=white" alt="Discord"></a> •
-  <a href="https://insideout.luthersystems.com/general-call"><img src="https://img.shields.io/badge/Book%20a%20Call-Schedule-4285F4?logo=google-calendar&logoColor=white" alt="Book a Call"></a>
-</p>
+Install InsideOut into your AI coding tool and manage cloud infrastructure using natural language.
+
+Describe what you want to build → get an architecture → estimate cost → generate Terraform → deploy to AWS or GCP → manage it ongoing.
 
 ---
 
-## About Luther Systems
+## Quick Install (30 seconds)
 
-Our mission is to accelerate the advent of the automated enterprise. Founded by a team who spent years automating complex processes for some of the world's largest financial institutions, Luther Systems builds platforms that bring enterprise-grade infrastructure and operations to teams of every size.
+```bash
+npx skills add luthersystems/agent-skills --path insideout
+```
 
-## What is this repo?
+Works with **Claude Code**, **Codex**, **Cursor**, **Kiro**, **Windsurf**, and [30+ other tools](https://agentskills.io).
 
-This repository contains portable [Agent Skills](https://agentskills.io) for Luther Systems products. Each skill follows the open `SKILL.md` standard and works across any compatible AI coding tool -- no vendor lock-in.
-
-## Available Skills
-
-| Skill | Description |
-|-------|-------------|
-| **[insideout](./insideout/)** | Agentic cloud infrastructure builder & manager. Design, price, deploy, and manage AWS & GCP infrastructure through conversation. |
+**[Try the web app](https://insideout.luthersystemsapp.com/)** -- no install required.
 
 ---
 
-## InsideOut
+## What You Can Do
 
-InsideOut brings AI-powered cloud infrastructure management into your editor. Describe what you want to build in plain language, and **Riley** -- your AI infrastructure advisor -- guides you through selecting services, configuring them, estimating costs, generating Terraform, deploying to AWS or GCP, and managing infrastructure in production.
+- Design AWS/GCP architectures conversationally
+- Get real-time cost estimates before deploying
+- Generate production-ready Terraform
+- Deploy infrastructure directly from your tool
+- Inspect environments and detect drift
+- Monitor logs and manage resources over time
 
-**No authentication or API keys required.** Install the skill and start building.
+---
 
-### What You Can Do
+## Who Is This For?
 
-- **Describe your goal** -- tell Riley what you're building, get expert infrastructure recommendations
-- **Discuss requirements** -- refine architecture, regions, compliance, scaling needs interactively
-- **Estimate cost** -- see real-time monthly cost estimates as components are added or changed
-- **Generate Terraform** -- production-ready, modular code with security best practices baked in
-- **Deploy** -- deploy directly to AWS or GCP from the conversation
-- **Operate and manage** -- inspect deployments, detect drift, roll back changes, monitor logs
+This is for developers, platform engineers, and AI-native builders who want to manage infrastructure without switching tools or writing everything manually.
 
-### Supported Services (50+)
+- **Developers** who want to go from idea to deployed backend quickly
+- **DevOps / platform engineers** who want faster architecture and IaC workflows
+- **Builders using AI coding tools** who want infrastructure built into their workflow
+
+If you'd rather describe what you want than manually wire it together -- this is for you.
+
+---
+
+## Quick Start
+
+Once installed, just ask:
+
+> "Build me a scalable API backend on AWS with a database and auth."
+
+InsideOut will:
+1. Propose an architecture (ECS, RDS, Cognito, ALB, VPC...)
+2. Estimate monthly cost
+3. Generate production-ready Terraform
+4. Deploy to your AWS or GCP account
+
+```
+You: "I need infrastructure for an e-commerce platform, 50k monthly users on AWS"
+
+Riley: "I'd recommend ECS for your containers, RDS PostgreSQL for your database,
+        ElastiCache Redis for sessions, and an ALB. Estimated cost: ~$350/month.
+        Want me to adjust anything?"
+
+You: "Looks good, generate the Terraform"
+
+[Generates production-ready Terraform files]
+
+You: "Deploy it"
+
+[Deploys to AWS, streams logs in real-time]
+```
+
+---
+
+## Choose Your Path
+
+There are a few ways to use InsideOut depending on your setup:
+
+| Path | Best for | Install |
+|------|----------|---------|
+| **This repo** (recommended) | Portable skill across multiple AI tools | `npx skills add luthersystems/agent-skills --path insideout` |
+| **[Claude Code plugin](https://github.com/luthersystems/insideout-claude-code)** | Best native Claude Code experience | `/plugin marketplace add luthersystems/insideout-claude-code` |
+| **[Kiro power](https://github.com/luthersystems/insideout-power)** | Best native Kiro experience | Add power from GitHub: `luthersystems/insideout-power` |
+| **[Web app](https://insideout.luthersystemsapp.com/)** | No install required | Open in browser |
+
+---
+
+## Installation (Detailed)
+
+### Recommended: Skills CLI
+
+```bash
+npx skills add luthersystems/agent-skills --path insideout
+```
+
+> **Note:** Because this repo contains multiple product skills, use the `--path` flag to install a specific one.
+
+### Claude Code
+
+For the full plugin experience (slash commands, agents, hooks, auto-approve):
+
+```
+/plugin marketplace add luthersystems/insideout-claude-code
+/plugin install insideout
+```
+
+### Codex
+
+1. Install the skill:
+```
+$skill-installer install https://github.com/luthersystems/agent-skills/tree/main/insideout
+```
+
+2. Activate by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically.
+
+> **Fallback:** If the auto-install doesn't trigger, run: `codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp`
+
+### Cursor
+
+```bash
+npx skills add luthersystems/agent-skills --path insideout
+```
+
+Then add the MCP server to your Cursor MCP config:
+
+```json
+{
+  "mcpServers": {
+    "insideout": {
+      "type": "http",
+      "url": "https://app.luthersystems.com/v1/insideout-mcp"
+    }
+  }
+}
+```
+
+### Windsurf
+
+```bash
+npx skills add luthersystems/agent-skills --path insideout
+```
+
+Add MCP via Windsurf MCP Marketplace or manually in settings.
+
+### Kiro
+
+For the full power experience (steering files, design pattern guides, auto-approve):
+
+1. Open the Powers panel
+2. Click **Add power from GitHub**
+3. Enter: `luthersystems/insideout-power`
+
+### Manual Installation
+
+```bash
+git clone https://github.com/luthersystems/agent-skills.git
+cp -r agent-skills/insideout ~/.claude/skills/    # Claude Code
+cp -r agent-skills/insideout ~/.codex/skills/     # Codex
+```
+
+---
+
+## Supported Services
 
 | Category | AWS | GCP |
 |----------|-----|-----|
@@ -61,59 +176,19 @@ InsideOut brings AI-powered cloud infrastructure management into your editor. De
 | **CI/CD** | CodePipeline, GitHub Actions | Cloud Build |
 | **Backup** | AWS Backup | GCP Backups |
 
-### Quick Start
+---
 
-Once installed, mention anything about infrastructure, cloud, AWS, GCP, Terraform, or deployment. The skill activates automatically.
+## Security & Auth Model
 
-```
-You: "I need cloud infrastructure for a web app"
+- **No API key required** to install or use the skill
+- The MCP server runs remotely over HTTPS -- no local binary needed
+- Cloud credentials are only required at deployment time, via a browser-based connect flow
+- You control what gets deployed into your cloud accounts
+- You can review all generated Terraform before deploying
 
-Riley: "Hi! I'm Riley, your infrastructure advisor. Tell me about the app
-        you're building -- what does it do, who uses it, and what scale
-        are you planning for?"
+---
 
-You: "It's an e-commerce platform expecting 50k monthly users on AWS"
-
-Riley: "Great! I'd recommend ECS for your containers, RDS PostgreSQL
-        for your database, ElastiCache Redis for sessions, and an ALB.
-        Estimated cost: ~$350/month. Want me to adjust anything?"
-
-You: "Looks good, generate the Terraform"
-
-[Generates production-ready Terraform files]
-
-You: "Deploy it"
-
-[Deploys to AWS, streams logs in real-time]
-```
-
-### Available Tools
-
-| Tool | Description |
-|------|-------------|
-| `convoopen` | Start a new infrastructure design session |
-| `convoreply` | Continue the design conversation with Riley |
-| `convoawait` | Wait for long-running operations |
-| `convostatus` | View current components, config, and pricing |
-| `tfgenerate` | Generate production-ready Terraform files |
-| `tfdeploy` | Deploy generated Terraform to AWS or GCP |
-| `tfplan` | Preview infrastructure changes without applying |
-| `tfdestroy` | Tear down deployed infrastructure |
-| `tfdrift` | Detect infrastructure drift |
-| `tfstatus` | Check deployment progress |
-| `tflogs` | Stream real-time deployment logs |
-| `tfoutputs` | Get Terraform outputs (VPC IDs, endpoints, etc.) |
-| `tfruns` | List all deployment runs for a session |
-| `stackversions` | List all design versions |
-| `stackdiff` | Compare two stack versions |
-| `stackrollback` | Revert to a previous design version |
-| `awsinspect` | Inspect deployed AWS resources |
-| `gcpinspect` | Inspect deployed GCP resources |
-| `credawait` | Poll for cloud credentials |
-| `submit_feedback` | Submit bug reports or feature requests |
-| `help` | Get workflow guidance |
-
-### How It Works
+## How It Works
 
 InsideOut uses a multi-agent AI system behind a single MCP server:
 
@@ -126,131 +201,38 @@ InsideOut uses a multi-agent AI system behind a single MCP server:
 | **Core** | Architecture validation and best practices |
 | **Axel** | Deployment orchestration |
 
-The conversation flows through these agents automatically. From your perspective, you're talking to Riley -- the other agents work behind the scenes.
+From your perspective, you're talking to Riley. The other agents work behind the scenes. These capabilities are exposed as tools inside your AI environment, so you use them conversationally.
 
 ---
 
-## Installation
-
-### Using `npx skills` (recommended -- works everywhere)
-
-```bash
-# Install the InsideOut skill
-npx skills add luthersystems/agent-skills --path insideout
-```
-
-This works with Claude Code, Codex, Cursor, Kiro, Windsurf, and any tool that supports the [agentskills.io](https://agentskills.io) standard.
-
-> **Note:** Because this repo contains multiple product skills, use the `--path` flag to install a specific one.
-
-### Using Codex
-
-1. Install the skill:
-```
-$skill-installer install https://github.com/luthersystems/agent-skills/tree/main/insideout
-```
-
-2. Activate it by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically. Accept the prompt, and you're ready to go.
-
-> **Note:** The MCP auto-install is triggered when you first invoke the skill with `$insideout`, not at skill install time. If Codex doesn't prompt, you can manually add the MCP server: `codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp`
-
-### Using Claude Code
-
-For the full Claude Code plugin experience (includes slash commands, agents, hooks, and auto-approve configuration), use the dedicated plugin:
-
-```
-/plugin marketplace add luthersystems/insideout-claude-code
-/plugin install insideout
-```
-
-### Using Kiro
-
-For the full Kiro power experience (includes steering files and auto-approve):
-
-1. Open the Powers panel
-2. Click **Add power from GitHub**
-3. Enter: `luthersystems/insideout-power`
-
-### Manual Installation
-
-Clone and copy the skill folder to your agent's skills directory:
-
-```bash
-git clone https://github.com/luthersystems/agent-skills.git
-cp -r agent-skills/insideout ~/.claude/skills/    # Claude Code
-cp -r agent-skills/insideout ~/.codex/skills/     # Codex
-```
-
-## MCP Server
-
-The InsideOut MCP server is remote (HTTPS) -- no local binary, no API keys, no authentication required. Each skill includes a `mcp.json` with the configuration:
-
-```json
-{
-  "mcpServers": {
-    "insideout": {
-      "type": "http",
-      "url": "https://app.luthersystems.com/v1/insideout-mcp"
-    }
-  }
-}
-```
-
-Add this to your agent's MCP configuration to enable the tools.
-
-## Platform-Specific Integrations
-
-This repo provides the portable, cross-platform skill. For richer integrations tailored to specific tools:
-
-| Platform | Repository | Install | Extras |
-|----------|-----------|---------|--------|
-| **Claude Code** | [insideout-claude-code](https://github.com/luthersystems/insideout-claude-code) | `/plugin marketplace add luthersystems/insideout-claude-code` | Plugin marketplace, `/insideout:start` command, agents, hooks, auto-approve |
-| **Kiro** | [insideout-power](https://github.com/luthersystems/insideout-power) | Add power from GitHub: `luthersystems/insideout-power` | Power format, steering files, auto-approve, design pattern guides |
-| **Any tool** | **This repo** | `npx skills add luthersystems/agent-skills --path insideout` | Portable skill + MCP config |
-
-## Repository Structure
-
-```
-luthersystems/agent-skills/
-├── README.md
-├── LICENSE
-├── insideout/
-│   ├── SKILL.md          # Skill definition (triggers, tools, workflow)
-│   └── mcp.json          # MCP server configuration
-└── (future products)
-```
-
-Each product gets its own folder. Install individual skills with the `--path` flag:
-
-```bash
-npx skills add luthersystems/agent-skills --path insideout
-```
-
-## Links
+## Resources
 
 - [InsideOut Platform](https://insideout.luthersystems.com)
-- [Standalone Web App](https://insideout.luthersystemsapp.com/) -- try InsideOut without any IDE
+- [Web App](https://insideout.luthersystemsapp.com/) -- try InsideOut without any IDE
 - [Demo Video](https://insideout.luthersystems.com/demo-video)
-- [Luther Systems](https://luthersystems.com)
 - [Terraform Presets](https://github.com/luthersystems/insideout-terraform-presets) -- the pre-built modules InsideOut composes
-- [Subreddit](https://www.reddit.com/r/luthersystems/)
-- [MCP Protocol](https://modelcontextprotocol.io)
 - [Agent Skills Standard](https://agentskills.io)
+- [Subreddit](https://www.reddit.com/r/luthersystems/)
 
-## Community & Support
+---
+
+## About Luther Systems
+
+Our mission is to accelerate the advent of the automated enterprise. Founded by a team who spent years automating complex processes for some of the world's largest financial institutions, Luther Systems builds platforms that bring enterprise-grade infrastructure and operations to teams of every size.
+
+- [Luther Systems](https://luthersystems.com)
+- [InsideOut](https://insideout.luthersystems.com)
+
+---
+
+## Get Help
 
 - [Discord](https://insideout.luthersystems.com/discord) -- chat with the devs and InsideOut users
-- [General Inquiry Call](https://insideout.luthersystems.com/general-call) -- book a call with us
+- [Book a Call](https://insideout.luthersystems.com/general-call) -- talk with us
 - [Tech Call](https://insideout.luthersystems.com/tech-call) -- talk with the devs
 - Email: [contact@luthersystems.com](mailto:contact@luthersystems.com)
 
-## Contributing
-
-1. Fork this repository
-2. Create a feature branch: `git checkout -b feature/my-improvement`
-3. Add or update a skill
-4. Test with your preferred agent tool
-5. Submit a pull request
+---
 
 ## License
 
