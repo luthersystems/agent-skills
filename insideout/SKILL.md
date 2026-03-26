@@ -7,6 +7,8 @@ description: >
   "generate terraform", "inspect my deployment", "what would this cost on AWS/GCP",
   or discusses scaling, high availability, disaster recovery, or compliance requirements
   for cloud infrastructure.
+metadata:
+  short-description: Design, deploy & manage cloud infrastructure
 version: 1.0.1
 ---
 

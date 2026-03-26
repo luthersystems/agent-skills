@@ -1,0 +1,38 @@
+# AI coding tool skill install directories
+# Each tool creates .<toolname>/skills/ when installing skills locally
+.adal/
+.agents/
+.augment/
+.codebuddy/
+.commandcode/
+.continue/
+.crush/
+.factory/
+.goose/
+.junie/
+.kilocode/
+.kiro/
+.kode/
+.mcpjam/
+.mux/
+.neovate/
+.openhands/
+.pi/
+.pochi/
+.qoder/
+.qwen/
+.roo/
+.trae/
+.vibe/
+.windsurf/
+.zencoder/
+
+# Auto-generated skill install artifacts
+skills/
+skills-lock.json
+
+# Claude Code local settings (user-specific)
+.claude/settings.local.json
+
+# Temporary files
+.tmp/
