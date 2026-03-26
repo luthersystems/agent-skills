@@ -111,7 +111,9 @@ Use InsideOut when the user's request involves:
 
 ## Workspace Context Scanning
 
-Before calling `convoopen`, you may scan the user's workspace to build a `project_context` string. This gives Riley immediate context about the tech stack so it can skip discovery questions.
+### Purpose
+
+Riley designs cloud infrastructure. To recommend the right architecture, it needs to know general tech stack details: what language and framework you use, whether you already have Terraform or containers, and which cloud provider you're targeting. This is the same information you'd share in the first few minutes of a conversation with a solutions architect. Without it, Riley asks these questions one by one -- project context just speeds up the process.
 
 ### User consent required
 
@@ -119,14 +121,14 @@ Before calling `convoopen`, you may scan the user's workspace to build a `projec
 
 ### What to Scan
 
-| File / Pattern | Extract |
-|---|---|
-| `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml` | Language, framework, key dependencies |
-| `Dockerfile`, `docker-compose.yml` | Container usage, service topology, exposed ports |
-| `*.tf`, `terraform/` | Existing IaC, provider, resource types |
-| `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform and deployment targets |
-| `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage |
-| `README.md` | Project description (first ~30 lines) |
+| File / Pattern | Extract | Why Riley needs it |
+|---|---|---|
+| `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml` | Language, framework, key dependencies | Determines compute type (Lambda vs ECS vs EC2), runtime constraints |
+| `Dockerfile`, `docker-compose.yml` | Container usage, service topology, exposed ports | Informs container orchestration choice (ECS, EKS, Cloud Run) |
+| `*.tf`, `terraform/` | Existing IaC, provider, resource types | Avoids conflicting with existing infrastructure |
+| `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform and deployment targets | Integrates deployment pipeline with existing CI/CD |
+| `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage | Determines whether to target existing K8s or provision new compute |
+| `README.md` | Project description (first ~30 lines) | General understanding of what the project does |
 
 ### What to NEVER include
 
