@@ -9,7 +9,7 @@ description: >
   for cloud infrastructure.
 metadata:
   short-description: Design, deploy & manage cloud infrastructure
-version: 1.0.1
+version: 1.0.2
 ---
 
 # InsideOut -- Agentic Infrastructure Builder & Manager
