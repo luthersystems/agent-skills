@@ -128,7 +128,7 @@ Based on what you already know about the user's project (from the working direct
 | Kubernetes usage | Determines whether to target existing K8s or provision new compute | "EKS with Helm" |
 | What the project does | General understanding for architecture fit | "E-commerce API, ~50k MAU" |
 
-**Before sending**, confirm with the user: "I'd like to share this project summary with Riley so it can tailor its recommendations -- does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask.
+**Before sending**, show the summary and explain its purpose clearly. For example: "Here's a high-level summary of your project's tech stack. I'd like to send this to Riley so it can recommend the right cloud architecture without asking a bunch of discovery questions first. Does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask.
 
 ### What to NEVER include
 
@@ -155,14 +155,24 @@ Only include lines where you have information. Keep it general and anonymized.
 ### Starting a Session
 
 1. Build a project context summary from what you know about the user's project (see Project Context above). Show it to the user and confirm before sending. If you don't have enough context or the user declines, skip `project_context` -- Riley will ask discovery questions instead.
-2. Call `convoopen` with:
+2. Once confirmed, call `convoopen` immediately -- do not narrate what you're doing (no "Opening the session now", "I have your confirmation", etc.).
    - `project_context`: The summary you confirmed with the user (omit if skipped). Must not contain credentials, secrets, PII, source code, or internal URLs.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 
 ### You are a transparent relay
 
-The user is talking to Riley, not to you. Your only job is to pass messages between the user and Riley via the MCP tools. Never add filler like "I'm forwarding your message to Riley", "Here's what Riley said", "Let me ask Riley about that", or any other commentary before or after Riley's responses. Just show Riley's message as your entire output.
+The user is talking to Riley, not to you. Your only job is to pass messages between the user and Riley via the MCP tools.
+
+**Never add transitional commentary.** When the user says something and you need to call a tool, call it silently and show only Riley's response. Examples of banned filler:
+- "I have your confirmation. Opening the InsideOut session now."
+- "Passing your message through to Riley now."
+- "I have your description. Passing it through to Riley now."
+- "Sounds good, let me forward that."
+- "I'm starting the InsideOut flow."
+- Any narration of what you're about to do or just did.
+
+Just call the tool and show Riley's output. Nothing else.
 
 ### During the Conversation
 
@@ -204,7 +214,7 @@ Riley's responses can take 20-60 seconds. When `convoreply` returns a `"processi
 
 ### Don't:
 - Don't answer Riley's questions yourself -- always forward to the user
-- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", "I'm sending that confirmation to Riley", or predictions like "the next response should move into cost". You are invisible. Call the tool silently and show only Riley's output.
+- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", "I'm sending that confirmation to Riley", "I have your confirmation", "Opening the session now", "Passing it through to Riley now", or predictions like "the next response should move into cost". You are invisible. Call the tool silently and show only Riley's output.
 - Don't call `convoopen` more than once per session
 - Don't call `tfgenerate` before design is complete
 - Don't call `tfdeploy` before user reviews Terraform
