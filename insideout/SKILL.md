@@ -109,28 +109,33 @@ Use InsideOut when the user's request involves:
 | **CI/CD** | CodePipeline, GitHub Actions | Cloud Build |
 | **Backup** | AWS Backup | GCP Backups |
 
-## Workspace Context Scanning
+## Project Context
 
-**Before calling `convoopen`**, scan the user's workspace to build a `project_context` string. This gives Riley immediate context about the tech stack.
+Riley designs cloud infrastructure. To recommend the right architecture, it needs to know general tech stack details -- the same information you'd share in the first few minutes of a conversation with a solutions architect. Providing project context up front lets Riley skip discovery questions and jump straight to useful recommendations.
 
-### What to Scan
+### How to build project context
 
-| File / Pattern | Extract |
-|---|---|
-| `package.json`, `go.mod`, `requirements.txt`, `Cargo.toml`, `pom.xml` | Language, framework, key dependencies |
-| `Dockerfile`, `docker-compose.yml` | Container usage, service topology, exposed ports |
-| `*.tf`, `terraform/` | Existing IaC, provider, resource types |
-| `.github/workflows/`, `.gitlab-ci.yml` | CI/CD platform and deployment targets |
-| `k8s/`, `kubernetes/`, `helm/` | Kubernetes usage |
-| `README.md` | Project description (first ~30 lines) |
-| `.env.example` | Environment variable names (NOT values) |
+Based on what you already know about the user's project (from the working directory, recent conversation, or what they've told you), put together a short summary covering whichever of these apply:
 
-### Cloud Provider Detection
+| Detail | Why Riley needs it | Example |
+|---|---|---|
+| Language and framework | Determines compute type (Lambda vs ECS vs EC2), runtime constraints | "Node.js 20, Next.js 15" |
+| Database and services | Shapes data tier and caching recommendations | "PostgreSQL, Redis" |
+| Container usage | Informs orchestration choice (ECS, EKS, Cloud Run) | "Docker Compose, 3 services" |
+| Existing infrastructure-as-code | Avoids conflicting with what's already provisioned | "Terraform with ECS + RDS" |
+| CI/CD platform | Integrates deployment pipeline | "GitHub Actions" |
+| Cloud provider | Targets the right provider from the start | "AWS" or "GCP" |
+| Kubernetes usage | Determines whether to target existing K8s or provision new compute | "EKS with Helm" |
+| What the project does | General understanding for architecture fit | "E-commerce API, ~50k MAU" |
 
-| Signal | Provider |
-|---|---|
-| `provider "aws"` in `.tf`, `aws-sdk`/`boto3` in deps | AWS |
-| `provider "google"` in `.tf`, `@google-cloud/*` in deps | GCP |
+**Before sending**, confirm with the user: "I'd like to share this project summary with Riley so it can tailor its recommendations -- does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask.
+
+### What to NEVER include
+
+- **Credentials or secrets** -- No API keys, tokens, passwords, private keys, or `.env` values
+- **PII** -- No usernames, emails, or personally identifiable information
+- **Source code** -- Only metadata summaries, never file contents
+- **Internal URLs or IPs** -- Omit specific internal hostnames, IPs, or endpoint URLs
 
 ### Format
 
@@ -143,15 +148,15 @@ Infrastructure: Docker Compose (3 services), Terraform
 CI/CD: GitHub Actions
 ```
 
-Only include lines where something was detected.
+Only include lines where you have information. Keep it general and anonymized.
 
 ## Conversation Flow
 
 ### Starting a Session
 
-1. Scan workspace files silently (no output to user)
+1. Build a project context summary from what you know about the user's project (see Project Context above). Show it to the user and confirm before sending. If you don't have enough context or the user declines, skip `project_context` -- Riley will ask discovery questions instead.
 2. Call `convoopen` with:
-   - `project_context`: The context string you built from scanning
+   - `project_context`: The summary you confirmed with the user (omit if skipped). Must not contain credentials, secrets, PII, source code, or internal URLs.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
 3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
 

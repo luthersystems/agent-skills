@@ -107,19 +107,18 @@ For the full plugin experience (slash commands, agents, hooks, auto-approve):
 
 ### Codex
 
-1. Install the skill:
-```
-$skill-installer install https://github.com/luthersystems/agent-skills/tree/main/insideout
+```bash
+npx skills add luthersystems/agent-skills --path insideout --agent codex
 ```
 
-2. Activate by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically.
+Activate by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically.
 
 > **Fallback:** If the auto-install doesn't trigger, run: `codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp`
 
 ### Cursor
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout
+npx skills add luthersystems/agent-skills --path insideout --agent cursor
 ```
 
 Then add the MCP server to your Cursor MCP config:
@@ -138,7 +137,7 @@ Then add the MCP server to your Cursor MCP config:
 ### Windsurf
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout
+npx skills add luthersystems/agent-skills --path insideout --agent windsurf
 ```
 
 Add MCP via Windsurf MCP Marketplace or manually in settings.
