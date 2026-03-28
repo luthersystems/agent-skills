@@ -28,7 +28,7 @@ InsideOut uses a remote MCP server. No local binary, no API keys, no authenticat
 
 Before proceeding with any InsideOut workflow, check if the `insideout` MCP tools (like `convoopen`, `convoreply`) are available. If they are not, the MCP server needs to be added.
 
-**Codex:** Run this command in the shell:
+**Codex:** Run this command in the shell, then type `$insideout` in the Codex prompt to finish the install:
 
 ```bash
 codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp
