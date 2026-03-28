@@ -154,9 +154,10 @@ For the full power experience (steering files, design pattern guides, auto-appro
 
 ```bash
 git clone https://github.com/luthersystems/agent-skills.git
-cp -r agent-skills/insideout ~/.claude/skills/    # Claude Code
-cp -r agent-skills/insideout ~/.codex/skills/     # Codex
+cp -r agent-skills/insideout ~/.agents/skills/
 ```
+
+The `~/.agents/skills/` directory is the standard cross-tool location. Most AI coding tools will detect skills here automatically.
 
 ---
 
