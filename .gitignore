@@ -34,5 +34,8 @@ skills-lock.json
 # Claude Code local settings (user-specific)
 .claude/settings.local.json
 
+# Firecrawl cache
+.firecrawl/
+
 # Temporary files
 .tmp/

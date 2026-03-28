@@ -26,13 +26,39 @@ InsideOut uses a remote MCP server. No local binary, no API keys, no authenticat
 
 ### If MCP server is not connected
 
-Before proceeding with any InsideOut workflow, check if the `insideout` MCP tools (like `convoopen`, `convoreply`) are available. If they are not, the MCP server needs to be added. Run this command in the shell:
+Before proceeding with any InsideOut workflow, check if the `insideout` MCP tools (like `convoopen`, `convoreply`) are available. If they are not, the MCP server needs to be added.
+
+**Codex:** Run this command in the shell:
 
 ```bash
 codex mcp add insideout --url https://app.luthersystems.com/v1/insideout-mcp
 ```
 
-For other agents, add this to your MCP configuration:
+**Antigravity:** Open the "..." menu → MCP Servers → Manage MCP Servers → View raw config → add the following (note: Antigravity uses `serverUrl`, not `url`):
+
+```json
+{
+  "mcpServers": {
+    "insideout": {
+      "serverUrl": "https://app.luthersystems.com/v1/insideout-mcp"
+    }
+  }
+}
+```
+
+**Cursor:** Open Settings → MCP → Add new MCP server → paste this config:
+
+```json
+{
+  "mcpServers": {
+    "insideout": {
+      "url": "https://app.luthersystems.com/v1/insideout-mcp"
+    }
+  }
+}
+```
+
+**Other agents:** Add this to your MCP configuration:
 
 ```json
 {
@@ -44,6 +70,8 @@ For other agents, add this to your MCP configuration:
   }
 }
 ```
+
+> **Note:** Different IDEs use different key names for the server URL. Antigravity uses `serverUrl`, while most others (Cursor, Claude Code, etc.) use `url`. The `type` field is optional in most clients.
 
 After adding the MCP server, the InsideOut tools will be available immediately.
 
