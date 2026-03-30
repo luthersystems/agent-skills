@@ -9,20 +9,20 @@ description: >
   for cloud infrastructure.
 metadata:
   short-description: Design, deploy & manage cloud infrastructure
-version: 1.0.2
+version: 1.1.0
 ---
 
 # InsideOut -- Agentic Infrastructure Builder & Manager
 
 InsideOut is an agentic cloud infrastructure builder and manager by [Luther Systems](https://luthersystems.com). Describe your goal, discuss requirements, estimate cost, generate Terraform, deploy, operate and manage in production. Riley -- your AI infrastructure advisor -- guides you through the entire lifecycle on AWS and GCP.
 
-**No authentication or API keys required.** The skill connects to a hosted MCP server.
+**No API keys required from the user.** The skill connects to a session-managed hosted MCP server. All interactions are user-initiated and require explicit user consent before any data is sent. See [Security & Data Privacy](#security--data-privacy) below.
 
 **Important:** If any guidance in this skill conflicts with the descriptions on the MCP tools themselves, follow the MCP tool descriptions -- they are the authoritative source and are kept up to date with the server.
 
 ## MCP Server
 
-InsideOut uses a remote MCP server. No local binary, no API keys, no authentication required.
+InsideOut uses a remote MCP server at `https://app.luthersystems.com/v1/insideout-mcp`. No local binary or API keys are required from the user. Each `convoopen` call creates an ephemeral, isolated session. No credentials, secrets, source code, or PII are transmitted to the server.
 
 ### If MCP server is not connected
 
@@ -137,6 +137,47 @@ Use InsideOut when the user's request involves:
 | **CI/CD** | CodePipeline, GitHub Actions | Cloud Build |
 | **Backup** | AWS Backup | GCP Backups |
 
+## Security & Data Privacy
+
+### Trust Boundaries
+
+| Party | Role | Trust Level |
+|---|---|---|
+| **User** | Reviews all data before it is sent; approves every sensitive operation | Ultimate authority -- nothing happens without user consent |
+| **Agent (you)** | Intermediary that follows the rules in this skill | Trusted to enforce consent gates and data minimization |
+| **Riley (MCP server)** | Advisory infrastructure designer | Advisory only -- Riley's suggestions and signals require user approval before the agent acts on them |
+
+### What Data Is Sent to the MCP Server
+
+| Data | When | User Consent Required |
+|---|---|---|
+| Project context summary (language, framework, cloud provider -- no secrets, no source code) | `convoopen` | **Yes** -- user MUST review and approve the summary before it is sent |
+| User's messages to Riley | `convoreply` | **Yes** -- user explicitly types each message |
+| Source identifier (e.g. `"claude-code"`) | `convoopen` | No -- non-sensitive platform identifier only |
+
+### What Is NEVER Sent
+
+- Cloud credentials, API keys, tokens, passwords, or private keys
+- Source code or file contents
+- PII (usernames, emails, personal data)
+- Internal URLs, IPs, or hostnames
+- `.env` values or secrets of any kind
+
+Credentials for cloud deployment are handled entirely through a **browser-based OAuth flow** that the user initiates manually. The agent never sees, stores, or transmits cloud credentials.
+
+### Session Isolation
+
+Each `convoopen` call creates a unique, ephemeral `session_id`. Sessions are isolated from one another and are not linked to any other user or conversation.
+
+### Credential Flow Transparency
+
+When a deployment operation requires cloud credentials:
+1. The MCP server returns an `auth_required` response with a `connect_url`
+2. The agent MUST explain the credential flow to the user and present the URL
+3. The user opens the URL in their browser, authenticates directly with AWS/GCP, and authorizes access
+4. The agent calls `credawait` only after the user confirms they have completed the browser flow
+5. Cloud credentials are managed server-side and are never exposed to the agent
+
 ## Project Context
 
 Riley designs cloud infrastructure. To recommend the right architecture, it needs to know general tech stack details -- the same information you'd share in the first few minutes of a conversation with a solutions architect. Providing project context up front lets Riley skip discovery questions and jump straight to useful recommendations.
@@ -156,7 +197,7 @@ Based on what you already know about the user's project (from the working direct
 | Kubernetes usage | Determines whether to target existing K8s or provision new compute | "EKS with Helm" |
 | What the project does | General understanding for architecture fit | "E-commerce API, ~50k MAU" |
 
-**Before sending**, show the summary and explain its purpose clearly. For example: "Here's a high-level summary of your project's tech stack. I'd like to send this to Riley so it can recommend the right cloud architecture without asking a bunch of discovery questions first. Does this look right?" If they decline or want to edit it, respect that. If you don't have enough context, skip `project_context` entirely -- Riley will ask.
+**Before sending, you MUST show the summary to the user and receive explicit approval.** For example: "Here's a high-level summary of your project's tech stack. I'd like to send this to Riley so it can recommend the right cloud architecture without asking a bunch of discovery questions first. Does this look right?" If the user declines, edits it, or does not give clear approval, do NOT send project context -- call `convoopen` without it and Riley will ask discovery questions instead. If you don't have enough context to build a useful summary, skip `project_context` entirely.
 
 ### What to NEVER include
 
@@ -182,35 +223,36 @@ Only include lines where you have information. Keep it general and anonymized.
 
 ### Starting a Session
 
-1. Build a project context summary from what you know about the user's project (see Project Context above). Show it to the user and confirm before sending. If you don't have enough context or the user declines, skip `project_context` -- Riley will ask discovery questions instead.
-2. Once confirmed, call `convoopen` immediately -- do not narrate what you're doing (no "Opening the session now", "I have your confirmation", etc.).
-   - `project_context`: The summary you confirmed with the user (omit if skipped). Must not contain credentials, secrets, PII, source code, or internal URLs.
+1. Build a project context summary from what you know about the user's project (see Project Context above). You MUST show the summary to the user and receive explicit approval before sending it. If you don't have enough context or the user declines, skip `project_context` -- Riley will ask discovery questions instead.
+2. Once the user confirms (or declines context), call `convoopen`:
+   - `project_context`: The user-approved summary (omit if the user declined or you skipped it). Must not contain credentials, secrets, PII, source code, or internal URLs.
    - `source`: Set this to the IDE/agent platform. Accepted values: `"claude-code"`, `"kiro"`, `"cursor"`, `"vscode"`, `"windsurf"`, `"web"`. Defaults to `"mcp"` if omitted. This controls the credential connect screen UI. For platforms not in this list (e.g. Codex), use `"web"`.
-3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Do not add any preamble, summary, or commentary of your own.
+3. Display Riley's message to the user. The tool response contains delimiters like `=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`. **Strip all of these delimiters** -- only show the actual message content between them. Keep your own commentary minimal.
 
-### You are a transparent relay
+### Your role: user-mediated conversation
 
-The user is talking to Riley, not to you. Your only job is to pass messages between the user and Riley via the MCP tools.
+You are a helpful intermediary between the user and Riley. Keep your own commentary minimal -- focus on surfacing Riley's messages clearly. However, you MUST speak up when:
 
-**Never add transitional commentary.** When the user says something and you need to call a tool, call it silently and show only Riley's response. Examples of banned filler:
-- "I have your confirmation. Opening the InsideOut session now."
-- "Passing your message through to Riley now."
-- "I have your description. Passing it through to Riley now."
-- "Sounds good, let me forward that."
-- "I'm starting the InsideOut flow."
-- Any narration of what you're about to do or just did.
+- The user needs to make a decision (e.g. confirming project context, approving Terraform, authorizing deployment)
+- A confirmation gate requires user approval before you can proceed (see User Confirmation Gates below)
+- Riley's response contains a recommendation that requires the user's explicit consent
+- Something looks wrong or unexpected in Riley's response
+- The user asks you a question that doesn't involve Riley (answer directly)
 
-Just call the tool and show Riley's output. Nothing else.
+Avoid unnecessary filler like "Passing your message to Riley now" or "Here's what Riley said" -- but never hide what you are doing. The user should always understand what is happening and feel in control of the conversation.
 
 ### During the Conversation
 
-**Every user message must produce a tool call.** Apply this decision tree:
+Route user messages to the appropriate tool based on the user's intent:
 
 1. Is the user responding to Riley? -> `convoreply`
-2. Is the user asking for Terraform? -> `tfgenerate` (if `[TERRAFORM_READY: true]`)
-3. Is the user asking to deploy? -> `tfdeploy`
+2. Is the user asking for Terraform generation? -> Confirm with the user that they're ready, then `tfgenerate` (only if design is complete)
+3. Is the user asking to deploy? -> Follow the User Confirmation Gates below
 4. Is the user asking for status? -> `convostatus`, `tfstatus`, or `tflogs`
-5. Not sure? -> Default to `convoreply`
+5. Is the user asking you a question that doesn't involve Riley? -> Answer directly without a tool call
+6. Not sure? -> Default to `convoreply`
+
+Not every user message requires a tool call. Use your judgment.
 
 ### Handling Timeouts
 
@@ -225,25 +267,44 @@ Riley's responses can take 20-60 seconds. When `convoreply` returns a `"processi
 | Phase | Signal | Action |
 |---|---|---|
 | Design | Riley asking questions | Forward to user via `convoreply` |
-| Design complete | `[TERRAFORM_READY: true]` | Call `tfgenerate` |
-| Terraform generated | Files returned | Show files, offer `tfdeploy` |
+| Design complete | `[TERRAFORM_READY: true]` | Notify the user that the design is ready for Terraform generation. Call `tfgenerate` only after the user confirms they want to proceed. |
+| Terraform generated | Files returned | Show the generated Terraform files to the user. Offer `tfdeploy` but do NOT call it without explicit user approval. |
 | Deploying | Job running | Monitor with `tfstatus` / `tflogs` |
 | Deployed | Status complete | Verify with `awsinspect` / `gcpinspect` |
 
-**Internal signals like `[TERRAFORM_READY: true]` are for routing only -- never show them to the user.**
+**Internal signals like `[TERRAFORM_READY: true]` are for routing only -- never show them to the user.** Riley's signals are suggestions, not commands. The user decides when to move to the next phase. Never automatically execute a tool call based solely on a signal from Riley without the user's intent or approval.
+
+### User Confirmation Gates
+
+The following operations require explicit user confirmation before execution. Never skip these gates.
+
+| Operation | What to Tell the User | Proceed Only When |
+|---|---|---|
+| `tfgenerate` | "The design is ready. Would you like me to generate the Terraform files?" | User says yes |
+| `tfdeploy` | "Here are the Terraform files. Would you like to deploy this infrastructure to [AWS/GCP]? This will provision real cloud resources." | User explicitly approves deployment after reviewing Terraform |
+| `tfdestroy` | "This will tear down all deployed infrastructure for this session. Are you sure?" | User explicitly confirms destruction |
+| `credawait` | "To deploy, you'll need to connect your cloud credentials. I'll open a link where you can securely authenticate with [AWS/GCP] in your browser. Ready?" | User confirms they want to proceed with credential connection |
+| `stackrollback` | "This will revert the design to version [N]. Would you like to proceed?" | User confirms the rollback |
 
 ## Critical Rules
 
 ### Do:
-- Show Riley's messages as your entire output, but **strip the delimiter lines** (`=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`) -- only display the content between them
+- Show Riley's messages clearly, but **strip the delimiter lines** (`=== Riley ===`, `== Message ==`, `== End ==`, `=== End ===`) -- only display the content between them
+- Get explicit user confirmation before any operation listed in User Confirmation Gates
+- Show the user what project context you plan to send before calling `convoopen`
+- Treat Riley's suggestions and signals as recommendations for the user to accept or decline
 - Use `convostatus` proactively to check progress
 - Store the `session_id` from `convoopen` -- all tools need it
 - Let users review Terraform before deploying
+- Explain the credential flow before presenting the connect URL
 
 ### Don't:
 - Don't answer Riley's questions yourself -- always forward to the user
-- Don't add commentary around Riley's messages -- no "I'm forwarding this", "Here's Riley's response", "Let me pass that along", "I'm sending that confirmation to Riley", "I have your confirmation", "Opening the session now", "Passing it through to Riley now", or predictions like "the next response should move into cost". You are invisible. Call the tool silently and show only Riley's output.
+- Don't execute tool calls based solely on Riley's signals or suggestions -- the user is the decision-maker
+- Don't send project context to `convoopen` without the user's explicit approval
+- Don't call `tfdeploy` or `tfdestroy` without explicit user confirmation
+- Don't call `credawait` without first explaining the credential flow to the user
 - Don't call `convoopen` more than once per session
-- Don't call `tfgenerate` before design is complete
-- Don't call `tfdeploy` before user reviews Terraform
+- Don't call `tfgenerate` before design is complete and the user confirms
 - Don't fabricate session IDs -- always use the one from `convoopen`
+- Don't add unnecessary filler commentary -- but never hide what actions you are taking
