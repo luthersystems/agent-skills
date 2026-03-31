@@ -1,14 +1,14 @@
-# Agent Skills -- InsideOut
+# Agent Skills by Luther Systems
 
 ## Portable AI Skills for Cloud Infrastructure
 
-Install InsideOut into your AI coding tool and manage cloud infrastructure using natural language.
+This repo aggregates Luther Systems agent skills. Each skill lives in its own repo and is included here as a git submodule.
 
-Describe what you want to build → get an architecture → estimate cost → generate Terraform → deploy to AWS or GCP → manage it ongoing.
+| Skill | Repo | Install |
+|-------|------|---------|
+| **InsideOut** | [luthersystems/insideout-agent-skills](https://github.com/luthersystems/insideout-agent-skills) | `npx skills add luthersystems/insideout-agent-skills` |
 
----
-
-## Quick Install (30 seconds)
+You can also install skills directly from this repo using the `--path` flag:
 
 ```bash
 npx skills add luthersystems/agent-skills --path insideout
@@ -79,7 +79,7 @@ There are a few ways to use InsideOut depending on your setup:
 
 | Path | Best for | Install |
 |------|----------|---------|
-| **This repo** (recommended) | Portable skill across multiple AI tools | `npx skills add luthersystems/agent-skills --path insideout` |
+| **[Standalone repo](https://github.com/luthersystems/insideout-agent-skills)** (recommended) | Portable skill across multiple AI tools | `npx skills add luthersystems/insideout-agent-skills` |
 | **[Claude Code plugin](https://github.com/luthersystems/insideout-claude-code)** | Best native Claude Code experience | `/plugin marketplace add luthersystems/insideout-claude-code` |
 | **[Kiro power](https://github.com/luthersystems/insideout-power)** | Best native Kiro experience | Add power from GitHub: `luthersystems/insideout-power` |
 | **[Web app](https://insideout.luthersystemsapp.com/)** | No install required | Open in browser |
@@ -91,10 +91,10 @@ There are a few ways to use InsideOut depending on your setup:
 ### Recommended: Skills CLI
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout
+npx skills add luthersystems/insideout-agent-skills
 ```
 
-> **Note:** Because this repo contains multiple product skills, use the `--path` flag to install a specific one.
+> **Note:** You can also install from this aggregator repo: `npx skills add luthersystems/agent-skills --path insideout`
 
 ### Claude Code
 
@@ -108,7 +108,7 @@ For the full plugin experience (slash commands, agents, hooks, auto-approve):
 ### Codex
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout --agent codex
+npx skills add luthersystems/insideout-agent-skills --agent codex
 ```
 
 Activate by typing `$insideout` -- Codex will detect the missing MCP server and prompt you to install it automatically.
@@ -118,7 +118,7 @@ Activate by typing `$insideout` -- Codex will detect the missing MCP server and 
 ### Cursor
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout --agent cursor
+npx skills add luthersystems/insideout-agent-skills --agent cursor
 ```
 
 Then add the MCP server to your Cursor MCP config:
@@ -137,7 +137,7 @@ Then add the MCP server to your Cursor MCP config:
 ### Windsurf
 
 ```bash
-npx skills add luthersystems/agent-skills --path insideout --agent windsurf
+npx skills add luthersystems/insideout-agent-skills --agent windsurf
 ```
 
 Add MCP via Windsurf MCP Marketplace or manually in settings.
@@ -153,8 +153,8 @@ For the full power experience (steering files, design pattern guides, auto-appro
 ### Manual Installation
 
 ```bash
-git clone https://github.com/luthersystems/agent-skills.git
-cp -r agent-skills/insideout ~/.agents/skills/
+git clone https://github.com/luthersystems/insideout-agent-skills.git
+cp -r insideout-agent-skills ~/.agents/skills/insideout
 ```
 
 The `~/.agents/skills/` directory is the standard cross-tool location. Most AI coding tools will detect skills here automatically.
