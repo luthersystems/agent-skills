@@ -47,7 +47,7 @@ If you'd rather describe what you want than manually wire it together -- this is
 
 Once installed, just ask:
 
-> "Build me a scalable API backend on AWS with a database and auth."
+> "Build me a scalable backend for my golang microservices app on AWS with a DB and auth."
 
 InsideOut will:
 1. Propose an architecture (ECS, RDS, Cognito, ALB, VPC...)
@@ -56,7 +56,7 @@ InsideOut will:
 4. Deploy to your AWS or GCP account
 
 ```
-You: "I need infrastructure for an e-commerce platform, 50k monthly users on AWS"
+You: "I need infrastructure for an e-commerce platform, 1k monthly users on AWS"
 
 Riley: "I'd recommend ECS for your containers, RDS PostgreSQL for your database,
         ElastiCache Redis for sessions, and an ALB. Estimated cost: ~$350/month.
@@ -150,6 +150,26 @@ For the full power experience (steering files, design pattern guides, auto-appro
 2. Click **Add power from GitHub**
 3. Enter: `luthersystems/insideout-power`
 
+### Antigravity
+
+```bash
+npx skills add luthersystems/insideout-agent-skills --agent antigravity
+```
+
+Then add the MCP server in Antigravity: "..." menu → MCP Servers → Manage MCP Servers → View raw config:
+
+```json
+{
+  "mcpServers": {
+    "insideout": {
+      "serverUrl": "https://app.luthersystems.com/v1/insideout-mcp"
+    }
+  }
+}
+```
+
+> **Note:** Antigravity uses `serverUrl`, not `url`.
+
 ### Manual Installation
 
 ```bash
@@ -161,7 +181,7 @@ The `~/.agents/skills/` directory is the standard cross-tool location. Most AI c
 
 ---
 
-## Supported Services
+## Supported Services (60+)
 
 | Category | AWS | GCP |
 |----------|-----|-----|
