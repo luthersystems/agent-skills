@@ -1,0 +1,3 @@
+[submodule "insideout"]
+	path = insideout
+	url = https://github.com/luthersystems/insideout-agent-skills.git
