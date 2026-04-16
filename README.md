@@ -1,17 +1,19 @@
 # Agent Skills by Luther Systems
 
-## Portable AI Skills for Cloud Infrastructure
+## Portable AI Skills
 
 This repo aggregates Luther Systems agent skills. Each skill lives in its own repo and is included here as a git submodule.
 
 | Skill | Repo | Install |
 |-------|------|---------|
 | **InsideOut** | [luthersystems/insideout-agent-skills](https://github.com/luthersystems/insideout-agent-skills) | `npx skills add luthersystems/insideout-agent-skills` |
+| **Substrate** | [luthersystems/substrate-agent-skills](https://github.com/luthersystems/substrate-agent-skills) | `npx skills add luthersystems/substrate-agent-skills` |
 
 You can also install skills directly from this repo using the `--path` flag:
 
 ```bash
 npx skills add luthersystems/agent-skills --path insideout
+npx skills add luthersystems/agent-skills --path substrate
 ```
 
 Works with **Claude Code**, **Codex**, **Cursor**, **Kiro**, **Windsurf**, and [30+ other tools](https://agentskills.io).

@@ -1,3 +1,6 @@
 [submodule "insideout"]
 	path = insideout
 	url = https://github.com/luthersystems/insideout-agent-skills.git
+[submodule "substrate"]
+	path = substrate
+	url = https://github.com/luthersystems/substrate-agent-skills.git
